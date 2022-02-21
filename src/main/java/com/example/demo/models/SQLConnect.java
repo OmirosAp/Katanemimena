@@ -11,13 +11,13 @@ import java.util.ArrayList;
 
 public class SQLConnect {
 	private static  Connection con;
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		connect2DB();
 		get_users() ;
-	}
+	}*/
 
-	
+	// sundeetai sto DB 
 	public static void connect2DB() {
 		
         String database_link = "jdbc:mysql://localhost:3306/katanemimena?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -41,6 +41,7 @@ public class SQLConnect {
 
     }
 	
+	//ektypwnei olous tous user
 	public static void get_users() {
 		String query="Select * From Users";
 		Statement st;
@@ -63,33 +64,45 @@ public class SQLConnect {
 		}
 	}
 	
-	
-	public static boolean valid_credentials(String username,String password) {
-		String query="Select Username,Password From Users";
+	//kanei to login check kai epistrefei "true" an einai swsta ta stoixeia kai "false" an oxi
+	public static User valid_credentials(String username,String password) {
+		connect2DB();
+		String query="Select Username,Password,Role From Users";
 		Statement st;
-		boolean valid=false;
+		User us=new Student();;
+		boolean found=false;
 		try {
 			st = con.createStatement();
 			ResultSet result = st.executeQuery(query);
 			while (result.next()) {				
 				String u=result.getString("Username");
 				String p=result.getString("Password");
+				String r=result.getString("Role");
 				if (username.equals(u)==true && password.equals(p)==true){
-					valid=true;
+					found=true;
+					if(r.equals("Student")) {
+						us=get_student(username);
+						
+					}
+					else if(r.equals("Professor")) {
+						us=get_professor( username) ;
+					}
 					
 					break;
 				}
 				
 				
 			}
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return valid;
+		
+		return us;
 	}
 	
-	
+	//kanei to register check kai epistrefei "true" an yparxei user kai "false" an den yparxei
 	public static boolean check_user_availiability(String username) {
 		connect2DB();
 		String query="Select Username From Users Where Username="+username;
@@ -114,6 +127,18 @@ public class SQLConnect {
 	}
 	
 	
+	public static Student get_student(String username) {
+		Student st=new Student();
+		ArrayList <Student> pin=getAllStudents();
+		for (int i=0;i<pin.size();i++) {
+			if (pin.get(i).getUsername().equals(username)) {
+				st=pin.get(i);
+				break;
+			}
+		}
+		return st; 
+	}
+	//add student to DB
 	public static boolean add_student(String username,String password, String name, String lname,int semester, int am ) {
 		String query="INSERT INTO USERS (Username, Password, Name, Lastname, Role) VALUES ('"+username+"', '"+password+"', '"+name+"', '"+lname+"', "+"'Student')";
 		String query2="INSERT INTO STUDENTS (Username, Semester, AM) Values ('"+username+"', "+semester+", "+am+")";
@@ -159,6 +184,7 @@ public class SQLConnect {
 		return deleted;
 	}
 	
+	//updates student password on DB
 	public static boolean updateStudent(String username, String password) {
 		String query="UPDATE Users SET Password='"+password+"' Where username='"+username+"'";
 		boolean updated=false;
@@ -178,6 +204,8 @@ public class SQLConnect {
 		}
 		return updated;
 	}
+	
+	//updates student semester on DB
 	public static boolean updateStudent(String username, int semester) {
 		String query="UPDATE Students SET Semester="+semester+" Where username='"+username+"'";
 		boolean updated=false;
@@ -197,6 +225,8 @@ public class SQLConnect {
 		}
 		return updated;
 	}
+	
+	////updates student password kai semester on DB
 	public static boolean updateStudent(String username, String password ,int semester) {
 		String query="UPDATE Users SET Password='"+password+"' Where username='"+username+"'";
 		String query2="UPDATE Students SET Semester="+semester+" Where username='"+username+"'";
@@ -219,6 +249,7 @@ public class SQLConnect {
 		return updated;
 	}
 	
+	// epistrefei arraylist me olous tous students
 	public static ArrayList <Student> getAllStudents(){
 		ArrayList<Student> student_list=new ArrayList<Student>();
 		String query="Select * From Users";
@@ -267,6 +298,20 @@ public class SQLConnect {
 		return student_list;//apostelletai san json
 	}
 	
+	
+	public static Professor get_professor(String username) {
+		Professor st=new Professor();
+		ArrayList <Professor> pin=getAllProfessors();
+		for (int i=0;i<pin.size();i++) {
+			if (pin.get(i).getUsername().equals(username)) {
+				st=pin.get(i);
+				break;
+			}
+		}
+		return st; 
+	}
+	
+	//prosthetei enan professor
 	public static boolean add_professor(String username,String password, String name, String lname ) {
 		String query="INSERT INTO USERS (Username, Password, Name, Lastname, Role) VALUES ('"+username+"', '"+password+"', '"+name+"', '"+lname+"', "+"'Professor')";
 		
@@ -288,6 +333,7 @@ public class SQLConnect {
 		return added;
 	}
 	
+	//prosthetei mathima ston professor
 	public static boolean add_course(String username, String course) {
 		String query = "INSERT INTO PROFESSORS (Username, Course) VALUES ('"+username+"', '"+course+"')";
 		boolean added=false;
@@ -306,6 +352,7 @@ public class SQLConnect {
 		
 	}
 	
+	//afairei mathimata
 	public static boolean remove_course(String username, String course) {
 		String query="DELETE FROM Professors Where username='"+username+"' and course='"+course+"'";
 		boolean deleted=false;
@@ -324,6 +371,8 @@ public class SQLConnect {
 		}
 		return deleted;
 	}
+	
+	//diagrafei professors
 	public static boolean delete_professor(String username) {
 		String query="DELETE FROM Users Where username='"+username+"'";
 		String query2="DELETE FROM Professors Where username='"+username+"'";
@@ -346,6 +395,8 @@ public class SQLConnect {
 		}
 		return deleted;
 	}
+	
+	// update prfessor password
 	public static boolean updateProfessor(String username, String password) {
 		String query="UPDATE Users SET Password='"+password+"' Where username='"+username+"'";
 		boolean updated=false;
@@ -363,6 +414,8 @@ public class SQLConnect {
 		}
 		return updated;
 	}
+	
+	//epistrefei arraylist me olous tous professors
 	public static ArrayList <Professor> getAllProfessors(){
 		ArrayList<Professor> professor_list=new ArrayList<Professor>();
 		String query="Select * From Users";

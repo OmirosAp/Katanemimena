@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+// h classh gia to student
 public class Student extends User {
 	
 
@@ -7,16 +8,26 @@ public class Student extends User {
 	private int am;
 	
 	public Student(String username, String password, String name, String lastname, int semester, int am) {
-		super(username, password, name, lastname);
+		super(username, password, name, lastname,"Student");
 		this.semester = semester;
 		this.am = am;
 	}
 	public Student(String username, String password, String name, String lastname) {
-		super(username, password, name, lastname);
+		super(username, password, name, lastname,"Student");
 		
 	}
+	public Student() {
+		
+		
+	}
+	
 
 
+	public Student(String username, String password, String name, String lastname,String role,int semester, int am) {
+		super(username, password, name, lastname,role);
+		this.semester = semester;
+		this.am = am;
+	}
 	public int getSemester() {
 		return semester;
 	}

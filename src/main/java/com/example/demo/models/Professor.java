@@ -1,19 +1,25 @@
 package com.example.demo.models;
 
 import java.util.ArrayList;
-//port 3306
-//username: root, password:huastudents1!
-//windows service nane: MySQL80
+//h classh elegxou tou professor
 
 public class Professor extends User{
 
 	ArrayList <String> courses = new ArrayList <String>();
 
 	public Professor(String username, String password, String name, String lastname) {
-		super(username, password, name, lastname);
+		super(username, password, name, lastname,"Professor");
+		
+	}
+	public Professor() {
 		
 	}
 
+		
+	public Professor(String username, String password, String name, String lastname,String role) {
+		super(username, password, name, lastname,role);
+		
+	}
 	public ArrayList<String> getCourses() {
 		return courses;
 	}

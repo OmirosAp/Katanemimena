@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.models.SQLConnect;
 import com.example.demo.models.Student;
 
+//kanei route sto /student
 @Controller
 @RequestMapping("students")
 public class StudentController {
 
 	//add student
+	//kanei route sto /addstudent
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean addStudent(@ModelAttribute Student newStudent) {//pairnai apo to post ta data kai dimiourgei enan kainourgio user
@@ -27,7 +29,7 @@ public class StudentController {
 	}
 	
 	//remove student
-	
+	//kanei route sto /removestudent
 	@RequestMapping(value = "delete", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean deleteStudent(@RequestParam(value="username",required=false,defaultValue="nouser") String username ){
@@ -37,6 +39,7 @@ public class StudentController {
 		
 	}
 	//update student
+	//kanei route sto /updatestudent
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean updateStudent(@RequestParam(value="username",required=false,defaultValue="nouser") String username, @RequestParam(value="password",required=false, defaultValue="nopassword") String password, @RequestParam(value="semester",required=false,defaultValue="-1") int semester ) {
@@ -54,6 +57,7 @@ public class StudentController {
 	}
 	
 	//get all students
+	//kanei route sto /getallstudent
 	@RequestMapping(value = "getall", method = RequestMethod.GET)
 	@ResponseBody
 	public ArrayList <Student> getAll(){

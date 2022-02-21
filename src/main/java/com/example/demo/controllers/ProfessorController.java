@@ -14,11 +14,11 @@ import com.example.demo.models.SQLConnect;
 import com.example.demo.models.Student;
 
 @Controller
-@RequestMapping("professors")
+@RequestMapping("professors") // h classh kanei routing sto /professors
 public class ProfessorController {
 	//add professor
 	
-	@RequestMapping(value = "add", method = RequestMethod.POST)
+	@RequestMapping(value = "add", method = RequestMethod.POST) // kanei routing sto /professors/add
 	@ResponseBody
 	public boolean addProfessor(@ModelAttribute Professor newProfessor) {//pairnai apo to post ta data kai dimiourgei enan kainourgio user
 		boolean added=newProfessor.add_professor_to_db();
@@ -27,6 +27,7 @@ public class ProfessorController {
 		
 	}
 	//add course to professor
+	// kanei routing sto /professors/addcourse
 	@RequestMapping(value = "addcourse", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean addCourse(@RequestParam(value="username",required=false,defaultValue="nousere") String username,@RequestParam(value="course",required=false,defaultValue="nocourse") String course) {
@@ -36,6 +37,7 @@ public class ProfessorController {
 		
 	}
 	//remove course
+	// kanei routing sto /professors/removecourse
 	@RequestMapping(value = "removecourse", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean removeCourse(@RequestParam(value="username",required=false,defaultValue="nousere") String username,@RequestParam(value="course",required=false,defaultValue="nocourse") String course) {
@@ -44,6 +46,7 @@ public class ProfessorController {
 		return removed;
 	}
 	//remove professor
+	// kanei routing sto /professors/removeprofessor
 		@RequestMapping(value = "delete", method = RequestMethod.POST)
 		@ResponseBody
 		public boolean deleteProfessor(@RequestParam(value="username",required=false,defaultValue="nouser") String username ){
@@ -55,6 +58,7 @@ public class ProfessorController {
 		
 	
 	//update professor
+	// kanei routing sto /professors/updateprofessor
 		@RequestMapping(value = "update", method = RequestMethod.POST)
 		@ResponseBody
 		public boolean updateProfessor(@RequestParam(value="username",required=false,defaultValue="nouser") String username, @RequestParam(value="password",required=false, defaultValue="nopassword") String password ) {
@@ -66,6 +70,7 @@ public class ProfessorController {
 		}
 	
 	//get all professor
+		// kanei routing sto /professors/getallprofessor
 		@RequestMapping(value = "getall", method = RequestMethod.GET)
 		@ResponseBody
 		public ArrayList <Professor> getAll(){

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Sistatikes</title>
+    <style>
+    	body{
+			background-color:#bca0dc;
+			margin:50px;
+		}
+		button{
+			background-color:#7c5295;
+			
+			
+			color:white;
+			border: 2px solid #52307c;
+  			border-radius: 5px;
+  			margin:10px;
+		}
+		input{
+			color: black;
+			border: 2px solid #52307c;
+  			border-radius: 5px;
+  			background-color:white;
+  			margin:10px; 
+		}
+		#res_stu{
+			margin-left:220px; 
+		
+		}
+		#nav_stu{
+			padding-bottom: 80px;
+		}
+    </style>
+    
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		var user;
+		function fill_drop_down_professors(){
+			const dd=document.getElementById("dd_prof")
+			axios({
+				method: "get",
+				url: "./professors/getall"}
+				).then(function(resp){
+					//console.log(resp.data)
+					for(let i=0;i<resp.data.length;i++){
+						//console.log(resp.data[i].username)
+						let op=document.createElement("option")
+						op.setAttribute("value",resp.data[i].username)
+						op.innerText=resp.data[i].name+ " "+resp.data[i].lastname
+						dd.append(op)
+					}
+				})
+		}
+		function fill_drop_down_students(){
+			const dd=document.getElementById("dd_prof")
+			axios({
+				method: "get",
+				url: "./students/getall"}
+				).then(function(resp){
+					//console.log(resp.data)
+					for(let i=0;i<resp.data.length;i++){
+						//console.log(resp.data[i].username)
+						let op=document.createElement("option")
+						op.setAttribute("value",resp.data[i].username)
+						op.innerText=resp.data[i].name+ " "+resp.data[i].lastname
+						dd.append(op)
+					}
+				})
+		}
+	</script>
+    <style>
+    	#wrong{
+			display:none
+		}
+		#nav_stu{
+			display:none
+		}
+		#req_let{
+			display:none
+		}
+		#res_let{
+			display:none
+		}
+		#register_div{
+			display:none
+		}
+		#courses{
+			display:none
+		}
+		#add_course{
+			display:none
+		}
+    </style>
+</head>
+<body>
+	<div id="nav_stu">
+		<button id="req_stu">Request Letter</button>
+		<button id="res_stu">View Results</button>
+	</div>
+	<div id="login_div">
+	<h1>Letters Of Recommendation</h1>
+	    <input id="username" placeholder="Username..."></input>
+	    <input id="password" placeholder="Password..."></input>
+	    <button id="btn_log">Log in</button>
+	    <label id="wrong">Wrong Password or Username !!!</label>
+	    <div><button id="btn_reg">Register...</button></div>
+    </div>
+    <div id="register_div">
+    
+    	<div>
+    		<select id="selection">
+    			<option value="Student">Student</option>
+    			<option value="Professor">Professor</option>
+    		</select>
+    	</div>
+    	<div><input id="r_username" placeholder="Username..."></input></div>
+    	<div><input id="r_password" placeholder="Password..."></input></div>
+    	<div><input id="first" placeholder="First Name..."></input></div>
+    	<div><input id="last" placeholder="Last Name..."></input></div>
+    	<div id="am_div"><input id="am" placeholder="AM..."></input></div>
+    	<div id="semester_div"><input id="semester" placeholder="Semester..."></input></div>
+    	<div id="courses">
+    		<div>
+    			<input class="course" placeholder="Course..."></input>
+    		</div>
+    	</div>    	
+    			<button id="add_course">New Course</button>
+    	<div>
+    		<button id="btn_register">Register</button>
+    		<button id="btn_Login">Login....</button>
+    	</div>
+    </div>
+    <div id="req_let">
+    		<div id="dd_prof_div">
+    			<label id="select_lab"></label><br>
+    			<select id="dd_prof">
+    			</select>
+    		</div>
+    		
+			<div id="upload_files">
+				<input type="file" name="files" id ="file" multiple>				
+				<button id="sub">Upload Files</button>
+				<label id="up_lab"></label>
+			</div>
+    </div>
+    
+    <div id="res_let">
+    		<h1>List of Files</h1>
+    		<div id="myfiles"></div>
+    </div>
+    
+    <script>
+    	const btn=document.getElementById("btn_log")
+    	console.log(btn)
+    	btn.addEventListener("click",function(){
+			const username=document.getElementById("username").value
+    		const password=document.getElementById("password").value
+    		/*axios.post("./login",{username:username,password:password}).then(function(resp){
+				console.log(resp)
+				
+			})*/
+			var bodyFormData = new FormData();
+			bodyFormData.append("username",username)
+			bodyFormData.append("password",password)
+			axios({
+				method: "post",
+				url: "./login",
+				 data: bodyFormData,
+				 headers: { "Content-Type": "multipart/form-data" }
+			}).then(function(resp){
+				console.log(resp)
+				
+				if(resp.data.username==null){
+					document.getElementById("wrong").style.display="block"	
+				}
+				else{
+					document.getElementById("login_div").style.display="none"	
+					user=resp.data
+					if(user.role=="Student"){
+						//console.log("hi marios")
+						document.getElementById("nav_stu").style.display="block"
+						document.getElementById("req_let").style.display="block"
+						fill_drop_down_professors()
+						document.getElementById("select_lab").innerText="Please Select Professor:"
+						
+						
+					}
+					else if(user.role=="Professor"){
+						document.getElementById("nav_stu").style.display="block"
+						document.getElementById("res_let").style.display="block"
+						
+						document.getElementById("res_stu").click()
+						fill_drop_down_students()
+						
+						document.getElementById("req_stu").innerText="View Requests"
+						document.getElementById("res_stu").innerText="Accept Requests"
+						document.getElementById("select_lab").innerText="Please Select Student:"
+						
+					}
+				}
+				
+			})
+		})
+    	
+    	const btn_upload=document.getElementById("sub")
+    	
+    	 
+    	btn_upload.addEventListener("click",function(){
+			const pro_user=document.getElementById("dd_prof").value
+			//console.log(user)
+			//console.log(pro_user)
+			var files = document.querySelector('#file');
+			console.log(files.files)
+		    var formData = new FormData();
+		    formData.append("files",files.files[0])
+		    formData.append("professor",pro_user)
+		    formData.append("student",user.username)
+			//console.log("pressed")
+			axios.post('./files/upload2', formData, {
+			    headers: {
+			      'Content-Type': 'multipart/form-data'
+			    }
+			}).then(function(resp){
+				const lab=document.getElementById("up_lab")
+				if (resp.data==true){
+					lab.innerText="Succesfully Uploaded!!!"
+				}
+				else{
+					lab.innerText="Something Went Wrong , please try again...."
+				}
+				
+				
+			})
+		})
+		
+		const btn_res_stu=document.getElementById("res_stu")
+		btn_res_stu.addEventListener("click",function(){
+			document.getElementById("req_let").style.display="none"
+			document.getElementById("res_let").style.display="block"
+			document.getElementById("myfiles").innerHTML=""
+			
+			axios.get("./files/downloads?student="+user.username).then(function(resp){
+				//console.log(resp)
+				
+				let myfiles=document.getElementById("myfiles")
+				for(let i=0;i<resp.data.length;i++){
+					// th:href=@{'/files/downloads/'+${file.getName()}}><span th:text="${file.getName()}"></span></a>
+					const div=document.createElement("div")
+					const a=document.createElement("a")
+					a.setAttribute("href","/files/downloads/"+resp.data[i])
+					const filename=resp.data[i].split("_")[2]+" by "+resp.data[i].split("_")[0]
+					a.innerText=filename
+					div.append(a)
+					myfiles.append(div)
+				}
+			})
+		})
+		const btn_req_stu=document.getElementById("req_stu")
+		
+		btn_req_stu.addEventListener("click",function(){
+			document.getElementById("req_let").style.display="block"
+			document.getElementById("res_let").style.display="none"
+		})
+		
+		const btn_req=document.getElementById("btn_reg")
+		btn_req.addEventListener("click",function(){
+			
+			document.getElementById("register_div").style.display="block"
+			document.getElementById("login_div").style.display="none"
+			})
+		
+		const btn_login=document.getElementById("btn_Login")
+		btn_login.addEventListener("click",function(){
+			
+			document.getElementById("register_div").style.display="none"
+			document.getElementById("login_div").style.display="block"
+			})
+		
+		
+		const req_dd=document.getElementById("selection")
+		req_dd.addEventListener("change",function(){
+			if(req_dd.value=="Professor"){
+				document.getElementById("am_div").style.display="none"
+				document.getElementById("semester_div").style.display="none"
+				document.getElementById("courses").style.display="block"
+				document.getElementById("add_course").style.display="block"
+				
+			}
+			else if(req_dd.value=="Student"){
+				document.getElementById("am_div").style.display="block"
+				document.getElementById("semester_div").style.display="block"
+				document.getElementById("courses").style.display="none"
+				document.getElementById("add_course").style.display="none"
+			}
+		})
+		const btn_add_course=document.getElementById("add_course")
+		btn_add_course.addEventListener("click",function(){
+			let courses_div=document.getElementById("courses")
+			let div=document.createElement("div")
+			let inp=document.createElement("input")
+			inp.setAttribute("class","course")
+			inp.setAttribute("placeholder","Course...")
+			
+			
+			div.append(inp)
+			courses_div.append(div)
+		})
+		
+		
+		const btn_register=document.getElementById("btn_register")
+		btn_register.addEventListener("click",function(){
+			let selection=document.getElementById("selection").value
+			
+			let username=document.getElementById("r_username").value
+    		let password=document.getElementById("r_password").value
+    		let first=document.getElementById("first").value
+    		let last=document.getElementById("last").value
+			if(selection=="Student"){  	
+    	
+    			
+    			let am=document.getElementById("am").value
+    			let semester=document.getElementById("semester").value
+    			//console.log(username,password,first,last,am,semester)
+    			var bodyFormData = new FormData();
+				bodyFormData.append("username",username)
+				bodyFormData.append("password",password)
+				bodyFormData.append("name",first)
+				bodyFormData.append("lastname",last)
+				bodyFormData.append("semester",semester)
+				bodyFormData.append("am",am)
+				axios({
+					method: "post",
+					url: "./students/add",
+					 data: bodyFormData,
+					 headers: { "Content-Type": "multipart/form-data" }
+				}).then(function(resp){
+					if (resp.data==true){
+						
+						document.getElementById("register_div").style.display="none"
+						document.getElementById("login_div").style.display="block"
+					}
+				})
+				
+			}
+			else if(selection=="Professor"){ 
+				
+				var bodyFormData = new FormData();
+				bodyFormData.append("username",username)
+				bodyFormData.append("password",password)
+				bodyFormData.append("name",first)
+				bodyFormData.append("lastname",last)
+				let added=[]
+				axios({
+					method: "post",
+					url: "./professors/add",
+					 data: bodyFormData,
+					 headers: { "Content-Type": "multipart/form-data" }
+				}).then(function(resp){
+					added.push(resp.data)
+				})
+				
+				//setTimeout(() => {  console.log("World!"); }, 1000);
+				let courses=document.getElementsByClassName("course")
+				//console.log(courses.length)
+				
+				for(let i=0;i<courses.length;i++){
+					
+					if(!courses[i].value==""){
+						console.log(courses[i].value)
+						var bodyFormData2 = new FormData();
+						bodyFormData2.append("username",username)
+						bodyFormData2.append("course",courses[i].value)
+						axios({
+							method: "post",
+							url: "./professors/addcourse",
+							 data: bodyFormData2,
+							 headers: { "Content-Type": "multipart/form-data" }
+						}).then(function(resp){
+							added.push(resp.data)
+						})
+					}
+				}
+				alladded=true
+				for(let i=0;i<added.length;i++){
+					if (added[i]==false){
+						alladded=false
+					}
+				}
+				
+				if (alladded==true){
+					document.getElementById("register_div").style.display="none"
+						document.getElementById("login_div").style.display="block"
+				}
+				
+			} 	
+    	
+		})
+		
+		
+    </script>
+   
+</body>
+
+</html>

@@ -1,10 +1,16 @@
 package com.example.demo.models;
+//abstract classh gia na klhronomei o professor kai student
 
 public abstract class User {
 	private String username;
 	private String password;
 	private String name;
 	private String lastname;
+	private String Role;
+	public User() {
+		
+	}
+			
 	
 	public User(String username, String password, String name, String lastname) {
 		this.username = username;
@@ -12,6 +18,29 @@ public abstract class User {
 		this.name = name;
 		this.lastname = lastname;
 	}
+	
+	
+	
+	public User(String username, String password, String name, String lastname, String role) {
+		
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.lastname = lastname;
+		Role = role;
+	}
+
+
+	public String getRole() {
+		return Role;
+	}
+
+
+	public void setRole(String role) {
+		Role = role;
+	}
+
+
 	public String getUsername() {
 		return username;
 	}
