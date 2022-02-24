@@ -98,13 +98,14 @@
 </head>
 <body>
 	<div id="nav_stu">
-		<button id="req_stu">Request Letter</button>
-		<button id="res_stu">View Results</button>
+		<button id="req_stu">View Results</button>
+		<button id="res_stu">Request Letter</button>
+		<button id="logout">Log Out</button>
 	</div>
 	<div id="login_div">
 	<h1>Letters Of Recommendation</h1>
 	    <input id="username" placeholder="Username..."></input>
-	    <input id="password" placeholder="Password..."></input>
+	    <input id="password" type="password" placeholder="Password..."></input>
 	    <button id="btn_log">Log in</button>
 	    <label id="wrong">Wrong Password or Username !!!</label>
 	    <div><button id="btn_reg">Register...</button></div>
@@ -118,7 +119,7 @@
     		</select>
     	</div>
     	<div><input id="r_username" placeholder="Username..."></input></div>
-    	<div><input id="r_password" placeholder="Password..."></input></div>
+    	<div><input id="r_password" type="password" placeholder="Password..."></input></div>
     	<div><input id="first" placeholder="First Name..."></input></div>
     	<div><input id="last" placeholder="Last Name..."></input></div>
     	<div id="am_div"><input id="am" placeholder="AM..."></input></div>
@@ -186,6 +187,8 @@
 						document.getElementById("req_let").style.display="block"
 						fill_drop_down_professors()
 						document.getElementById("select_lab").innerText="Please Select Professor:"
+						document.getElementById("req_stu").innerText="View Results"
+						document.getElementById("res_stu").innerText= "Request Letter"
 						
 						
 					}
@@ -227,17 +230,19 @@
 			}).then(function(resp){
 				const lab=document.getElementById("up_lab")
 				if (resp.data==true){
-					lab.innerText="Succesfully Uploaded!!!"
+					//lab.innerText="Succesfully Uploaded!!!"
+					alert("Succesfully Uploaded!!!")
 				}
 				else{
-					lab.innerText="Something Went Wrong , please try again...."
+					//lab.innerText="Something Went Wrong , please try again...."
+					alert("Something Went Wrong , please try again....")
 				}
 				
 				
 			})
 		})
 		
-		const btn_res_stu=document.getElementById("res_stu")
+		const btn_res_stu=document.getElementById("req_stu")
 		btn_res_stu.addEventListener("click",function(){
 			document.getElementById("req_let").style.display="none"
 			document.getElementById("res_let").style.display="block"
@@ -259,7 +264,7 @@
 				}
 			})
 		})
-		const btn_req_stu=document.getElementById("req_stu")
+		const btn_req_stu=document.getElementById("res_stu")
 		
 		btn_req_stu.addEventListener("click",function(){
 			document.getElementById("req_let").style.display="block"
@@ -268,6 +273,15 @@
 		
 		const btn_req=document.getElementById("btn_reg")
 		btn_req.addEventListener("click",function(){
+			
+			document.getElementById("r_username").value=""
+    		document.getElementById("r_password").value=""
+    		document.getElementById("first").value=""
+    		document.getElementById("last").value=""
+    		document.getElementById("am").value=""
+    		document.getElementById("semester").value=""
+    		document.getElementById("courses").innerHTML=""
+    		
 			
 			document.getElementById("register_div").style.display="block"
 			document.getElementById("login_div").style.display="none"
@@ -278,6 +292,7 @@
 			
 			document.getElementById("register_div").style.display="none"
 			document.getElementById("login_div").style.display="block"
+			
 			})
 		
 		
@@ -398,6 +413,22 @@
 				
 			} 	
     	
+		})
+		
+		
+		const btn_logout=document.getElementById("logout")
+		btn_logout.addEventListener("click",function(){
+			/*
+			document.getElementById("nav_stu").style.display="none"
+			document.getElementById("register_div").style.display="none"
+			document.getElementById("req_let").style.display="none"
+			document.getElementById("res_let").style.display="none"
+			document.getElementById("login_div").style.display="block"
+			document.getElementById("dd_prof").innerHTML=""
+			document.getElementById("myfiles").innerHTML=""
+			*/
+			location.reload()
+			
 		})
 		
 		
